@@ -1,3 +1,5 @@
 from django.contrib import admin
+from .models import Holding, Watchlist
 
-# Register your models here.
+admin.site.register(Holding)
+admin.site.register(Watchlist)
