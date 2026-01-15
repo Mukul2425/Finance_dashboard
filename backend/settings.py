@@ -48,6 +48,8 @@ INSTALLED_APPS = [
     'users',
     'portfolio',
     'market',
+    'dashboard',
+
 ]
 
 MIDDLEWARE = [

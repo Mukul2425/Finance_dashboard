@@ -31,6 +31,7 @@ urlpatterns = [
     path('api/auth/', include('users.urls')),
     path('api/portfolio/', include('portfolio.urls')),
     path('api/market/', include('market.urls')),
-    
+    path('api/dashboard/', include('dashboard.urls')),
+
 ]
 
