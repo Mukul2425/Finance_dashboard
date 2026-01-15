@@ -20,3 +20,12 @@ class Asset(models.Model):
     def __str__(self):
         return f"{self.symbol} ({self.asset_type})"
 
+from django.utils import timezone
+
+class PriceCache(models.Model):
+    asset = models.OneToOneField(Asset, on_delete=models.CASCADE)
+    price = models.FloatField()
+    last_updated = models.DateTimeField(default=timezone.now)
+
+    def is_fresh(self, minutes=10):
+        return (timezone.now() - self.last_updated).total_seconds() < minutes * 60

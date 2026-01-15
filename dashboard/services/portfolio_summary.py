@@ -2,16 +2,42 @@ from portfolio.models import Holding
 from market.services.coingecko import get_crypto_price
 from market.services.alphavantage import get_stock_quote
 
+from market.models import PriceCache
+from django.utils import timezone
+
 def get_current_price(asset):
+    try:
+        cache = PriceCache.objects.get(asset=asset)
+        if cache.is_fresh():
+            return cache.price
+    except PriceCache.DoesNotExist:
+        cache = None
+
+    # Fetch from API if no cache or stale
     if asset.asset_type == "CRYPTO":
         data = get_crypto_price(asset.coingecko_id)
-        return data[asset.coingecko_id]["usd"]
+        price = data[asset.coingecko_id]["usd"]
 
-    if asset.asset_type == "STOCK":
+    elif asset.asset_type == "STOCK":
         data = get_stock_quote(asset.symbol)
-        return float(data["Global Quote"]["05. price"])
+        price = float(data["Global Quote"]["05. price"])
 
-    return 0
+    else:
+        price = 0
+
+    # Save / update cache
+    if cache:
+        cache.price = price
+        cache.last_updated = timezone.now()
+        cache.save()
+    else:
+        PriceCache.objects.create(
+            asset=asset,
+            price=price
+        )
+
+    return price
+
 
 
 def get_portfolio_summary(user):
