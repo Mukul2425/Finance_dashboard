@@ -1,6 +1,6 @@
 const API_BASE = "http://127.0.0.1:8000/api";
 
-export async function apiRequest(endpoint, method = "GET", body = null, token = null) {
+export async function apiRequest(endpoint, method = "GET", body = null, token) {
   const headers = {
     "Content-Type": "application/json",
   };
