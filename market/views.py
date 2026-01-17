@@ -40,3 +40,20 @@ class StockMarketView(APIView):
             "quote": quote,
             "history": history
         }, status=status.HTTP_200_OK)
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from django.core.cache import cache
+from market.services.snapshot import get_market_snapshot
+
+class PublicMarketSnapshotView(APIView):
+    authentication_classes = []
+    permission_classes = []
+
+    def get(self, request):
+        data = cache.get("public_market_snapshot")
+
+        if not data:
+            data = get_market_snapshot()
+            cache.set("public_market_snapshot", data, 300)
+
+        return Response(data)
