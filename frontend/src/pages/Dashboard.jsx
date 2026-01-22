@@ -3,6 +3,7 @@ import TopStats from "../components/TopStats";
 import PortfolioChart from "../components/PortfolioChart";
 import { fetchDashboardSummary } from "../api/dashboard";
 import { useAuth } from "../auth/AuthContext";
+import MarketSnapshot from "../components/MarketSnapshot";
 
 export default function Dashboard() {
   const { token } = useAuth();
@@ -28,8 +29,14 @@ export default function Dashboard() {
 
   return (
     <div className="flex flex-col gap-8">
+
+      {/* 🔥 MARKET SNAPSHOT — ALWAYS AT TOP */}
+      <MarketSnapshot />
+
+      {/* PERSONAL PORTFOLIO SECTION */}
       <TopStats summary={summary} />
       <PortfolioChart assets={summary.assets} />
+
     </div>
   );
 }

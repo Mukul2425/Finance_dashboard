@@ -50,10 +50,24 @@ class PublicMarketSnapshotView(APIView):
     permission_classes = []
 
     def get(self, request):
-        data = cache.get("public_market_snapshot")
+        cached = cache.get("public_market_snapshot")
 
-        if not data:
+        try:
             data = get_market_snapshot()
-            cache.set("public_market_snapshot", data, 300)
+            if any(data.values()):
+                cache.set("public_market_snapshot", data, 300)
+                return Response(data)
+        except Exception:
+            pass
 
-        return Response(data)
+        # fallback to cache if API fails
+        if cached:
+            return Response(cached)
+
+        return Response({
+            "crypto": {},
+            "indices": {},
+            "commodities": {},
+            "error": "Market temporarily unavailable"
+        })
+

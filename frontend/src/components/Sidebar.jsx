@@ -1,6 +1,6 @@
 import { useAuth } from "../auth/AuthContext";
 
-export default function Sidebar() {
+export default function Sidebar({ setPage }) {
   const { logout } = useAuth();
 
   return (
@@ -10,15 +10,24 @@ export default function Sidebar() {
       </h1>
 
       <nav className="flex flex-col gap-4 text-gray-400 flex-1">
-        <span className="text-green-400 font-medium">Dashboard</span>
-        <span className="hover:text-white cursor-pointer">Portfolio</span>
-        <span className="hover:text-white cursor-pointer">Watchlist</span>
-        <span className="hover:text-white cursor-pointer">Settings</span>
+        <button
+          onClick={() => setPage("dashboard")}
+          className="text-left hover:text-white"
+        >
+          Dashboard
+        </button>
+
+        <button
+          onClick={() => setPage("market")}
+          className="text-left hover:text-white"
+        >
+          Market
+        </button>
       </nav>
 
       <button
         onClick={logout}
-        className="mt-6 text-red-400 hover:text-red-500 text-sm"
+        className="text-red-400 hover:text-red-500 text-sm"
       >
         Logout
       </button>
